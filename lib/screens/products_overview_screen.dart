@@ -44,10 +44,11 @@ class ProductsOverviewScreen extends StatelessWidget {
         padding: const EdgeInsets.all(10.0),
         itemCount: loadedProducts.length,
         itemBuilder: (ctx, i) {
+          var loadedProductsIndex = loadedProducts[i];
           return ProductItem(
-            loadedProducts[i].id,
-            loadedProducts[i].title,
-            loadedProducts[i].imageUrl,
+            loadedProductsIndex.id,
+            loadedProductsIndex.title,
+            loadedProductsIndex.imageUrl,
           );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
