@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './models/custom_colors.dart';
 import './screens/products_overview_screen.dart';
 
 void main() => runApp(MyApp());
@@ -9,7 +10,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MyShop',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(
+        primarySwatch: primaryTheme,
+        accentColor: accentTheme,
+        canvasColor: canvasTheme,
+        fontFamily: 'Lato',
+      ),
       home: ProductsOverviewScreen(),
     );
   }
