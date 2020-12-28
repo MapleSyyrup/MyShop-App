@@ -13,6 +13,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var accentColor = Theme.of(context).accentColor;
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GridTile(
@@ -25,13 +26,13 @@ class ProductItem extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.favorite),
             onPressed: () {},
-            color: Theme.of(context).accentColor,
+            color: accentColor,
           ),
           title: Text(title, textAlign: TextAlign.center),
           trailing: IconButton(
             icon: Icon(Icons.shopping_cart),
             onPressed: () {},
-            color: Theme.of(context).accentColor,
+            color: accentColor,
           ),
         ),
       ),
