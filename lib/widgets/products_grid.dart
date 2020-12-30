@@ -8,7 +8,7 @@ import './product_item.dart';
 class ProductsGrid extends StatelessWidget {
   final bool showFavs;
 
-  ProductsGrid(this.showFavs);
+  const ProductsGrid({this.showFavs});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ProductsGrid extends StatelessWidget {
           child: ProductItem(),
         );
       },
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 3 / 2,
         crossAxisSpacing: 10,
