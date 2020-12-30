@@ -2,12 +2,43 @@ import 'package:flutter/material.dart';
 
 import '../widgets/products_grid.dart';
 
-class ProductsOverviewScreen extends StatelessWidget {
+enum FilterOptions {
+  Favorites,
+  All,
+}
+
+class ProductsOverviewScreen extends StatefulWidget {
+  @override
+  _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
+}
+
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+  void showOnlyFavorites(FilterOptions selectedValue) {
+    setState(() {
+      _showOnlyFavorites = selectedValue == FilterOptions.Favorites;
+    });
+  }
+
+  var _showOnlyFavorites = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('MyShop')),
-      body: ProductsGrid(),
+      appBar: AppBar(
+        title: Text('MyShop'),
+        actions: [
+          PopupMenuButton(
+            onSelected: showOnlyFavorites,
+            icon: Icon(
+              Icons.more_vert,
+            ),
+            itemBuilder: (_) => [
+              PopupMenuItem(child: Text('Only Favorites'), value: FilterOptions.Favorites),
+              PopupMenuItem(child: Text('Show All'), value: FilterOptions.All),
+            ],
+          ),
+        ],
+      ),
+      body: ProductsGrid(_showOnlyFavorites),
     );
   }
 }
