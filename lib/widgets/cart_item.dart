@@ -6,12 +6,12 @@ class CartItem extends StatelessWidget {
   final int quantity;
   final String title;
 
-  const CartItem(
-    this.id,
-    this.price,
-    this.quantity,
-    this.title,
-  );
+  const CartItem({
+    @required this.id,
+    @required this.price,
+    @required this.quantity,
+    @required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +26,7 @@ class CartItem extends StatelessWidget {
           leading: CircleAvatar(
             child: Padding(
               padding: const EdgeInsets.all(5),
-              child: FittedBox(
-                child: Text('\$$price'),
-              ),
+              child: FittedBox(child: Text('\$$price')),
             ),
           ),
           title: Text(title),

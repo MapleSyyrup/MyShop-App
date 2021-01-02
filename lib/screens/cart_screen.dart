@@ -10,10 +10,10 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
+    final primaryColor = Theme.of(context).primaryColor;
+    final primaryTextTheme = Theme.of(context).primaryTextTheme.headline1.color;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Cart'),
-      ),
+      appBar: AppBar(title: Text('Your Cart')),
       body: Column(
         children: [
           Card(
@@ -31,13 +31,13 @@ class CartScreen extends StatelessWidget {
                   Chip(
                     label: Text(
                       '\$${cart.totalAmount}',
-                      style: TextStyle(color: Theme.of(context).primaryTextTheme.headline1.color),
+                      style: TextStyle(color: primaryTextTheme),
                     ),
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: primaryColor,
                   ),
                   FlatButton(
                     onPressed: () {},
-                    textColor: Theme.of(context).primaryColor,
+                    textColor: primaryColor,
                     child: Text('Order Now'),
                   )
                 ],
@@ -49,15 +49,13 @@ class CartScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: cart.itemCount,
               itemBuilder: (ctx, i) {
-                final items = cart.items.values.toList()[i];
-                final cartItem2 = CartItem(
-                  items.id,
-                  items.price,
-                  items.quantity,
-                  items.title,
+                final item = cart.items.values.toList()[i];
+                return CartItem(
+                  id: item.id,
+                  price: item.price,
+                  quantity: item.quantity,
+                  title: item.title,
                 );
-                final cartItem = cartItem2;
-                return cartItem;
               },
             ),
           )
