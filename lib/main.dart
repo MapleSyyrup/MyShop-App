@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           canvasColor: canvasTheme,
           fontFamily: 'Lato',
         ),
-        home: ProductsOverviewScreen(),
+        initialRoute: ProductsOverviewScreen.routeName,
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
