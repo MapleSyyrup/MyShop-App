@@ -9,7 +9,6 @@ import './providers/cart.dart';
 import './providers/products_provider.dart';
 import './screens/product_detail_screen.dart';
 import './screens/products_overview_screen.dart';
-// import './screens/orders_screen.dart';
 
 void main() => runApp(MyApp());
 

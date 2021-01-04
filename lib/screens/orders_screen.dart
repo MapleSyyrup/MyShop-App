@@ -13,15 +13,11 @@ class OrdersScreen extends StatelessWidget {
     final orderData = Provider.of<Orders>(context);
     final orderDt = orderData.orders;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Your Orders'),
-      ),
+      appBar: AppBar(title: Text('Your Orders')),
       drawer: AppDrawer(),
       body: ListView.builder(
         itemCount: orderDt.length,
-        itemBuilder: (ctx, i) => OrderItem(
-          order: orderDt[i],
-        ),
+        itemBuilder: (ctx, i) => OrderItem(order: orderDt[i]),
       ),
     );
   }
