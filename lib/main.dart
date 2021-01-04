@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
           fontFamily: 'Lato',
         ),
         initialRoute: ProductsOverviewScreen.routeName,
+        onGenerateRoute: (settings) => MaterialPageRoute<dynamic>(builder: (ctx) => ProductsOverviewScreen()),
+        onUnknownRoute: (settings) => MaterialPageRoute<dynamic>(builder: (ctx) => ProductsOverviewScreen()),
         routes: {
           ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
           CartScreen.routeName: (ctx) => CartScreen(),
