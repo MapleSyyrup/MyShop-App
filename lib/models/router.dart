@@ -8,7 +8,7 @@ import '../screens/products_overview_screen.dart';
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings setting) {
     switch (setting.name) {
-      case '/Products-Overview':
+      case '/products-overview':
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductsOverviewScreen());
       case '/product-detail':
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductDetailScreen());
