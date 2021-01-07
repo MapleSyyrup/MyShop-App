@@ -44,15 +44,11 @@ class CartItem extends StatelessWidget {
             content: Text('Doyou want to remove the item from the cart?'),
             actions: [
               FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
+                onPressed: () => Navigator.of(context).pop(false),
                 child: Text('No'),
               ),
               FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
+                onPressed: () => Navigator.of(context).pop(true),
                 child: Text('Yes'),
               ),
             ],
