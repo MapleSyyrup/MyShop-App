@@ -13,7 +13,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
-  final _form = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   var _editedProduct = Product(
     id: null,
     title: '',
@@ -44,7 +44,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _saveForm() => _form.currentState.save();
+  void _saveForm() => _formKey.currentState.save();
 
   Product buildProductImageUrl(Product eProduct, String value) {
     return Product(
@@ -103,7 +103,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _form,
+          key: _formKey,
           child: ListView(
             children: [
               TextFormField(
