@@ -46,8 +46,50 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() => _form.currentState.save();
 
+  Product buildProductImageUrl(Product eProduct, String value) {
+    return Product(
+      title: eProduct.title,
+      price: eProduct.price,
+      description: eProduct.description,
+      imageUrl: value,
+      id: null,
+    );
+  }
+
+  Product buildProductDescription(Product eProduct, String value) {
+    return Product(
+      title: eProduct.title,
+      price: eProduct.price,
+      description: value,
+      imageUrl: eProduct.imageUrl,
+      id: null,
+    );
+  }
+
+  Product buildProductPrice(Product eProduct, String value) {
+    return Product(
+      title: eProduct.title,
+      price: double.parse(value),
+      description: eProduct.description,
+      imageUrl: eProduct.imageUrl,
+      id: null,
+    );
+  }
+
+  Product buildProductTitle(String value, Product eProduct) {
+    return Product(
+      title: value,
+      price: eProduct.price,
+      description: eProduct.description,
+      imageUrl: eProduct.imageUrl,
+      id: null,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final focusScope = FocusScope.of(context);
+    final eProduct = _editedProduct;
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
@@ -67,54 +109,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
               TextFormField(
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_priceFocusNode);
-                },
-                onSaved: (value) {
-                  final eProduct = _editedProduct;
-                  _editedProduct = Product(
-                    title: value,
-                    price: eProduct.price,
-                    description: eProduct.description,
-                    imageUrl: eProduct.imageUrl,
-                    id: null,
-                  );
-                },
+                onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
+                onSaved: (value) => _editedProduct = buildProductTitle(value, eProduct),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Price'),
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.number,
                 focusNode: _priceFocusNode,
-                onFieldSubmitted: (_) {
-                  FocusScope.of(context).requestFocus(_descriptionFocusNode);
-                },
-                onSaved: (value) {
-                  final eProduct = _editedProduct;
-                  _editedProduct = Product(
-                    title: eProduct.title,
-                    price: double.parse(value),
-                    description: eProduct.description,
-                    imageUrl: eProduct.imageUrl,
-                    id: null,
-                  );
-                },
+                onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
+                onSaved: (value) => _editedProduct = buildProductPrice(eProduct, value),
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
-                onSaved: (value) {
-                  final eProduct = _editedProduct;
-                  _editedProduct = Product(
-                    title: eProduct.title,
-                    price: eProduct.price,
-                    description: value,
-                    imageUrl: eProduct.imageUrl,
-                    id: null,
-                  );
-                },
+                onSaved: (value) => _editedProduct = buildProductDescription(eProduct, value),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -148,19 +159,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       textInputAction: TextInputAction.done,
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
-                      onFieldSubmitted: (_) {
-                        _saveForm();
-                      },
-                      onSaved: (value) {
-                        final eProduct = _editedProduct;
-                        _editedProduct = Product(
-                          title: eProduct.title,
-                          price: eProduct.price,
-                          description: eProduct.description,
-                          imageUrl: value,
-                          id: null,
-                        );
-                      },
+                      onFieldSubmitted: (_) => _saveForm(),
+                      onSaved: (value) => _editedProduct = buildProductImageUrl(eProduct, value),
                     ),
                   ),
                 ],
