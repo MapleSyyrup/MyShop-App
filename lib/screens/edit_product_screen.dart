@@ -40,11 +40,23 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if ((!_imageUrlController.text.startsWith('http') && !_imageUrlController.text.startsWith('https')) ||
+          (!_imageUrlController.text.endsWith('.png') &&
+              !_imageUrlController.text.endsWith('jpg') &&
+              !_imageUrlController.text.endsWith('.jpeg'))) {
+        return;
+      }
       setState(() {});
     }
   }
 
-  void _saveForm() => _formKey.currentState.save();
+  void _saveForm() {
+    final isValid = _formKey.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState.save();
+  }
 
   Product buildProductImageUrl(Product eProduct, String value) {
     return Product(
@@ -86,6 +98,44 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 
+  String validatorImageUrl(String value) {
+    if (value.isEmpty) {
+      return 'Please enter an image URL';
+    }
+    if (value.startsWith('http') && !value.startsWith('https')) {
+      return 'Please enter a valid URL.';
+    }
+    if (!value.endsWith('.png') && !value.endsWith('jpg') && !value.endsWith('.jpeg')) {
+      return 'Please enter a valid image URL.';
+    }
+    return null;
+  }
+
+  String validatorDescription(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a description';
+    }
+    if (value.length < 10 != null) {
+      return 'Should be at least 10 characters long.';
+    }
+    return null;
+  }
+
+  String validatorPrice(String value) {
+    if (value.isEmpty) {
+      return 'Please enter a price.';
+    }
+    if (double.tryParse(value) == null) {
+      return 'Please enter a valid number';
+    }
+    if (double.parse(value) <= 0) {
+      return 'Please enter a number greater than zero.';
+    }
+    return null;
+  }
+
+  String validatorTitle(String value) => value.isEmpty ? 'Please provide a value' : null;
+
   @override
   Widget build(BuildContext context) {
     final focusScope = FocusScope.of(context);
@@ -96,7 +146,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () {},
+            onPressed: () => _saveForm(),
           ),
         ],
       ),
@@ -110,6 +160,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
+                validator: validatorTitle,
                 onSaved: (value) => _editedProduct = buildProductTitle(value, eProduct),
               ),
               TextFormField(
@@ -118,6 +169,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 keyboardType: TextInputType.number,
                 focusNode: _priceFocusNode,
                 onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
+                validator: validatorPrice,
                 onSaved: (value) => _editedProduct = buildProductPrice(eProduct, value),
               ),
               TextFormField(
@@ -125,6 +177,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
+                validator: validatorDescription,
                 onSaved: (value) => _editedProduct = buildProductDescription(eProduct, value),
               ),
               Row(
@@ -160,6 +213,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       controller: _imageUrlController,
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) => _saveForm(),
+                      validator: validatorImageUrl,
                       onSaved: (value) => _editedProduct = buildProductImageUrl(eProduct, value),
                     ),
                   ),
