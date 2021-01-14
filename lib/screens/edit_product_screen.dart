@@ -134,12 +134,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return null;
   }
 
-  String validatorTitle(String value) {
-    if (value.isEmpty) {
-      return 'Please provide a value.';
-    }
-    return null;
-  }
+  String validatorTitle(String value) => value.isEmpty ? 'Please provide a value' : null;
 
   @override
   Widget build(BuildContext context) {
