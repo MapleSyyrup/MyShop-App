@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myshop_app/providers/product.dart';
+import 'package:myshop_app/providers/products_provider.dart';
+import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -12,15 +14,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
+  final _textController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _descriptionController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  var _editedProduct = Product(
-    id: null,
-    title: '',
-    price: 0,
-    description: '',
-    imageUrl: '',
-  );
 
   @override
   void initState() {
@@ -52,50 +50,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
+    final newProduct = Product(
+      title: _textController.text,
+      price: double.parse(_priceController.text),
+      description: _descriptionController.text,
+      imageUrl: _imageUrlController.text,
+      id: DateTime.now().toString(),
+    );
     if (!isValid) {
       return;
     }
+
     _formKey.currentState.save();
-  }
-
-  Product buildProductImageUrl(Product eProduct, String value) {
-    return Product(
-      title: eProduct.title,
-      price: eProduct.price,
-      description: eProduct.description,
-      imageUrl: value,
-      id: null,
-    );
-  }
-
-  Product buildProductDescription(Product eProduct, String value) {
-    return Product(
-      title: eProduct.title,
-      price: eProduct.price,
-      description: value,
-      imageUrl: eProduct.imageUrl,
-      id: null,
-    );
-  }
-
-  Product buildProductPrice(Product eProduct, String value) {
-    return Product(
-      title: eProduct.title,
-      price: double.parse(value),
-      description: eProduct.description,
-      imageUrl: eProduct.imageUrl,
-      id: null,
-    );
-  }
-
-  Product buildProductTitle(String value, Product eProduct) {
-    return Product(
-      title: value,
-      price: eProduct.price,
-      description: eProduct.description,
-      imageUrl: eProduct.imageUrl,
-      id: null,
-    );
+    Provider.of<ProductsProvider>(context, listen: false).addProduct(newProduct);
+    Navigator.of(context).pop();
   }
 
   String validatorImageUrl(String value) {
@@ -115,8 +83,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (value.isEmpty) {
       return 'Please enter a description';
     }
-    if (value.length < 10 != null) {
-      return 'Should be at least 10 characters long.';
+    if (value.length < 10) {
+      return 'Please enter more than 10 characters';
     }
     return null;
   }
@@ -134,12 +102,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return null;
   }
 
-  String validatorTitle(String value) => value.isEmpty ? 'Please provide a value' : null;
+  String validatorTitle(String value) {
+    if (value.isEmpty) {
+      return 'Please provide a value.';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
     final focusScope = FocusScope.of(context);
-    final eProduct = _editedProduct;
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
@@ -157,29 +129,29 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'Title'),
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
-                validator: validatorTitle,
-                onSaved: (value) => _editedProduct = buildProductTitle(value, eProduct),
-              ),
+                  decoration: InputDecoration(labelText: 'Title'),
+                  textInputAction: TextInputAction.next,
+                  onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
+                  controller: _textController,
+                  validator: validatorTitle,
+                  onSaved: (value) => () {}),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Price'),
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.number,
-                focusNode: _priceFocusNode,
-                onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
-                validator: validatorPrice,
-                onSaved: (value) => _editedProduct = buildProductPrice(eProduct, value),
-              ),
+                  decoration: InputDecoration(labelText: 'Price'),
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.number,
+                  focusNode: _priceFocusNode,
+                  onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
+                  controller: _priceController,
+                  validator: validatorPrice,
+                  onSaved: (value) => () {}),
               TextFormField(
-                decoration: InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-                keyboardType: TextInputType.multiline,
-                focusNode: _descriptionFocusNode,
-                validator: validatorDescription,
-                onSaved: (value) => _editedProduct = buildProductDescription(eProduct, value),
-              ),
+                  decoration: InputDecoration(labelText: 'Description'),
+                  maxLines: 3,
+                  keyboardType: TextInputType.multiline,
+                  focusNode: _descriptionFocusNode,
+                  controller: _descriptionController,
+                  validator: validatorDescription,
+                  onSaved: (value) => () {}),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -207,15 +179,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      decoration: InputDecoration(labelText: 'Image Url'),
-                      keyboardType: TextInputType.url,
-                      textInputAction: TextInputAction.done,
-                      controller: _imageUrlController,
-                      focusNode: _imageUrlFocusNode,
-                      onFieldSubmitted: (_) => _saveForm(),
-                      validator: validatorImageUrl,
-                      onSaved: (value) => _editedProduct = buildProductImageUrl(eProduct, value),
-                    ),
+                        decoration: InputDecoration(labelText: 'Image Url'),
+                        keyboardType: TextInputType.url,
+                        textInputAction: TextInputAction.done,
+                        controller: _imageUrlController,
+                        focusNode: _imageUrlFocusNode,
+                        onFieldSubmitted: (_) => _saveForm(),
+                        validator: validatorImageUrl,
+                        onSaved: (value) => () {}),
                   ),
                 ],
               ),
