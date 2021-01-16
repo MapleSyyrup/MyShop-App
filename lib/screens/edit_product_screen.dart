@@ -14,7 +14,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
-  final _textController = TextEditingController();
+  final _titleController = TextEditingController();
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
@@ -51,7 +51,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
     final newProduct = Product(
-      title: _textController.text,
+      title: _titleController.text,
       price: double.parse(_priceController.text),
       description: _descriptionController.text,
       imageUrl: _imageUrlController.text,
@@ -130,7 +130,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 decoration: InputDecoration(labelText: 'Title'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
-                controller: _textController,
+                controller: _titleController,
                 validator: validatorTitle,
               ),
               TextFormField(
