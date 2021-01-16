@@ -57,6 +57,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       imageUrl: _imageUrlController.text,
       id: DateTime.now().toString(),
     );
+    _formKey.currentState.save();
     if (!isValid) {
       return;
     }
@@ -103,10 +104,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   String validatorTitle(String value) {
-    if (value.isEmpty) {
-      return 'Please provide a value.';
-    }
-    return null;
+    return value.isEmpty ? 'Error description exampler' : null;
   }
 
   @override
@@ -129,29 +127,29 @@ class _EditProductScreenState extends State<EditProductScreen> {
           child: ListView(
             children: [
               TextFormField(
-                  decoration: InputDecoration(labelText: 'Title'),
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
-                  controller: _textController,
-                  validator: validatorTitle,
-                  onSaved: (value) => () {}),
+                decoration: InputDecoration(labelText: 'Title'),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
+                controller: _textController,
+                validator: validatorTitle,
+              ),
               TextFormField(
-                  decoration: InputDecoration(labelText: 'Price'),
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  focusNode: _priceFocusNode,
-                  onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
-                  controller: _priceController,
-                  validator: validatorPrice,
-                  onSaved: (value) => () {}),
+                decoration: InputDecoration(labelText: 'Price'),
+                textInputAction: TextInputAction.next,
+                keyboardType: TextInputType.number,
+                focusNode: _priceFocusNode,
+                onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
+                controller: _priceController,
+                validator: validatorPrice,
+              ),
               TextFormField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  focusNode: _descriptionFocusNode,
-                  controller: _descriptionController,
-                  validator: validatorDescription,
-                  onSaved: (value) => () {}),
+                decoration: InputDecoration(labelText: 'Description'),
+                maxLines: 3,
+                keyboardType: TextInputType.multiline,
+                focusNode: _descriptionFocusNode,
+                controller: _descriptionController,
+                validator: validatorDescription,
+              ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -179,14 +177,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   ),
                   Expanded(
                     child: TextFormField(
-                        decoration: InputDecoration(labelText: 'Image Url'),
-                        keyboardType: TextInputType.url,
-                        textInputAction: TextInputAction.done,
-                        controller: _imageUrlController,
-                        focusNode: _imageUrlFocusNode,
-                        onFieldSubmitted: (_) => _saveForm(),
-                        validator: validatorImageUrl,
-                        onSaved: (value) => () {}),
+                      decoration: InputDecoration(labelText: 'Image Url'),
+                      keyboardType: TextInputType.url,
+                      textInputAction: TextInputAction.done,
+                      controller: _imageUrlController,
+                      focusNode: _imageUrlFocusNode,
+                      onFieldSubmitted: (_) => _saveForm(),
+                      validator: validatorImageUrl,
+                    ),
                   ),
                 ],
               ),
