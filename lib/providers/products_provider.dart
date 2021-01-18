@@ -43,6 +43,8 @@ class ProductsProvider with ChangeNotifier {
 
   Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
 
+  // addProduct is called when the user adds a new product in the shop
+  // newProduct is used here because product is a final variable and can't be changed
   void addProduct(Product product) {
     final newProduct = Product(
       title: product.title,
@@ -60,8 +62,6 @@ class ProductsProvider with ChangeNotifier {
     if (prodIndex >= 0) {
       _items[prodIndex] = newProduct;
       notifyListeners();
-    } else {
-      // print('...');
-    }
+    } else {}
   }
 }

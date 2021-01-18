@@ -7,7 +7,7 @@ class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-detail';
   final String productDetailArgs;
 
-  const ProductDetailScreen({Key key, this.productDetailArgs}) : super(key: key);
+  const ProductDetailScreen({@required this.productDetailArgs});
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +16,7 @@ class ProductDetailScreen extends StatelessWidget {
       listen: false,
     ).findById(productDetailArgs);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedProduct.title),
-      ),
+      appBar: AppBar(title: Text(loadedProduct.title)),
       body: SingleChildScrollView(
         child: Column(
           children: [

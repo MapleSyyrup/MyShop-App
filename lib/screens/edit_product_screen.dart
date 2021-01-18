@@ -8,7 +8,7 @@ class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
   final EditProductArguments editProductarguments;
 
-  const EditProductScreen({Key key, this.editProductarguments}) : super(key: key);
+  const EditProductScreen({@required this.editProductarguments});
 
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
@@ -17,7 +17,7 @@ class EditProductScreen extends StatefulWidget {
 class EditProductArguments {
   final String productId;
 
-  EditProductArguments(this.productId);
+  EditProductArguments({@required this.productId});
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
@@ -93,6 +93,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (_editedProduct.id != null) {
       Provider.of<ProductsProvider>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
     } else {
+      //id is a final variable so it can't be pass here and change it
       Provider.of<ProductsProvider>(context, listen: false).addProduct(_editedProduct);
     }
 
