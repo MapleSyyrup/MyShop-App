@@ -13,7 +13,9 @@ class Routers {
       case '/products-overview':
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductsOverviewScreen());
       case '/product-detail':
-        return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductDetailScreen());
+        final argument = setting.arguments as String;
+        return MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => ProductDetailScreen(productDetailArgs: argument));
       case '/cart':
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => CartScreen());
       case '/orders':
@@ -21,7 +23,9 @@ class Routers {
       case '/user-products':
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => UserProductsScreen());
       case '/edit-product':
-        return MaterialPageRoute<dynamic>(builder: (BuildContext context) => EditProductScreen());
+        final args = setting.arguments as EditProductArguments;
+        return MaterialPageRoute<dynamic>(
+            builder: (BuildContext context) => EditProductScreen(editProductarguments: args));
       default:
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductsOverviewScreen());
     }
