@@ -62,6 +62,6 @@ class ProductsProvider with ChangeNotifier {
     if (prodIndex >= 0) {
       _items[prodIndex] = newProduct;
       notifyListeners();
-    } else {}
+    }
   }
 }
