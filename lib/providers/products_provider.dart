@@ -43,8 +43,15 @@ class ProductsProvider with ChangeNotifier {
 
   Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
 
+  // addProduct is called when the user adds a new product in the shop
+  // newProduct is used here because product is a final variable and can't be changed
   void addProduct(Product product) {
     _items.add(product);
+    notifyListeners();
+  }
+
+  void updateProduct(Product product) {
+    _items[_items.indexWhere((prod) => prod.id == product.id)] = product;
     notifyListeners();
   }
 }

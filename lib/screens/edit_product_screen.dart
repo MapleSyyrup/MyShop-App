@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:myshop_app/providers/product.dart';
-import 'package:myshop_app/providers/products_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/product.dart';
+import '../providers/products_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
+  final EditProductArguments editProductarguments;
+
+  const EditProductScreen({@required this.editProductarguments});
 
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
+}
+
+class EditProductArguments {
+  final String productId;
+
+  EditProductArguments({@required this.productId});
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
@@ -19,6 +29,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descriptionController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  var _editedProduct = Product(
+    id: null,
+    title: '',
+    price: 0,
+    description: '',
+    imageUrl: '',
+  );
 
   @override
   void initState() {
@@ -27,12 +44,34 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    final args = widget.editProductarguments;
+    if (args != null) {
+      _editedProduct = Provider.of<ProductsProvider>(context, listen: false).findById(args.productId);
+      _titleController.text = _editedProduct.title;
+      _titleController.selection = TextSelection.fromPosition(TextPosition(offset: _titleController.text.length));
+      _descriptionController.text = _editedProduct.description;
+      _descriptionController.selection =
+          TextSelection.fromPosition(TextPosition(offset: _descriptionController.text.length));
+      _priceController.text = _editedProduct.price.toString();
+      _priceController.selection = TextSelection.fromPosition(TextPosition(offset: _priceController.text.length));
+      _imageUrlController.text = _editedProduct.imageUrl;
+      _imageUrlController.selection = TextSelection.fromPosition(TextPosition(offset: _imageUrlController.text.length));
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _imageUrlController.dispose();
     _imageUrlFocusNode.dispose();
+    _titleController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    _imageUrlController.dispose();
+
     super.dispose();
   }
 
@@ -50,20 +89,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
-    final newProduct = Product(
+
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState.save();
+    final product = Product(
+      id: _editedProduct.id ?? DateTime.now().toString(),
       title: _titleController.text,
       price: double.parse(_priceController.text),
       description: _descriptionController.text,
       imageUrl: _imageUrlController.text,
-      id: DateTime.now().toString(),
     );
-    _formKey.currentState.save();
-    if (!isValid) {
-      return;
-    }
-
-    _formKey.currentState.save();
-    Provider.of<ProductsProvider>(context, listen: false).addProduct(newProduct);
+    final provider = Provider.of<ProductsProvider>(context, listen: false);
+    _editedProduct.id != null ? provider.updateProduct(product) : provider.addProduct(product);
     Navigator.of(context).pop();
   }
 
@@ -104,7 +143,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   String validatorTitle(String value) {
-    return value.isEmpty ? 'Error description exampler' : null;
+    return value.isEmpty ? 'Error description example' : null;
   }
 
   @override
@@ -116,7 +155,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () => _saveForm(),
+            onPressed: _saveForm,
           ),
         ],
       ),
