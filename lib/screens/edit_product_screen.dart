@@ -29,7 +29,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _descriptionController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
-  var _isInit = true;
   var _editedProduct = Product(
     id: null,
     title: '',
@@ -46,18 +45,19 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   void didChangeDependencies() {
-    if (_isInit) {
-      final args = widget.editProductarguments;
-      if (args != null) {
-        _editedProduct = Provider.of<ProductsProvider>(context, listen: false).findById(args.productId);
-
-        _titleController.text = _editedProduct.title;
-        _descriptionController.text = _editedProduct.description;
-        _priceController.text = _editedProduct.price.toString();
-        _imageUrlController.text = _editedProduct.imageUrl;
-      }
+    final args = widget.editProductarguments;
+    if (args != null) {
+      _editedProduct = Provider.of<ProductsProvider>(context, listen: false).findById(args.productId);
+      _titleController.text = _editedProduct.title;
+      _titleController.selection = TextSelection.fromPosition(TextPosition(offset: _titleController.text.length));
+      _descriptionController.text = _editedProduct.description;
+      _descriptionController.selection =
+          TextSelection.fromPosition(TextPosition(offset: _descriptionController.text.length));
+      _priceController.text = _editedProduct.price.toString();
+      _priceController.selection = TextSelection.fromPosition(TextPosition(offset: _priceController.text.length));
+      _imageUrlController.text = _editedProduct.imageUrl;
+      _imageUrlController.selection = TextSelection.fromPosition(TextPosition(offset: _imageUrlController.text.length));
     }
-    _isInit = false;
     super.didChangeDependencies();
   }
 
@@ -66,8 +66,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _imageUrlFocusNode.removeListener(_updateImageUrl);
     _priceFocusNode.dispose();
     _descriptionFocusNode.dispose();
-    _imageUrlController.dispose();
     _imageUrlFocusNode.dispose();
+    _titleController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    _imageUrlController.dispose();
+
     super.dispose();
   }
 
@@ -90,13 +94,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    if (_editedProduct.id != null) {
-      Provider.of<ProductsProvider>(context, listen: false).updateProduct(_editedProduct.id, _editedProduct);
-    } else {
-      //id is a final variable so it can't be pass here and change it
-      Provider.of<ProductsProvider>(context, listen: false).addProduct(_editedProduct);
-    }
-
+    final product = Product(
+      id: _editedProduct.id ?? DateTime.now().toString(),
+      title: _titleController.text,
+      price: double.parse(_priceController.text),
+      description: _descriptionController.text,
+      imageUrl: _imageUrlController.text,
+    );
+    final provider = Provider.of<ProductsProvider>(context, listen: false);
+    _editedProduct.id != null ? provider.updateProduct(product) : provider.addProduct(product);
     Navigator.of(context).pop();
   }
 
@@ -137,51 +143,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   String validatorTitle(String value) {
-    return value.isEmpty ? 'Error description exampler' : null;
-  }
-
-  void onSavedImageUrl(String value) {
-    _editedProduct = Product(
-      title: _editedProduct.title,
-      price: _editedProduct.price,
-      description: _editedProduct.description,
-      imageUrl: value,
-      id: _editedProduct.id,
-      isFavorite: _editedProduct.isFavorite,
-    );
-  }
-
-  void onSavedDescription(String value) {
-    _editedProduct = Product(
-      title: _editedProduct.title,
-      price: _editedProduct.price,
-      description: value,
-      imageUrl: _editedProduct.imageUrl,
-      id: _editedProduct.id,
-      isFavorite: _editedProduct.isFavorite,
-    );
-  }
-
-  void onSavedPrice(String value) {
-    _editedProduct = Product(
-      title: _editedProduct.title,
-      price: double.parse(value),
-      description: _editedProduct.description,
-      imageUrl: _editedProduct.imageUrl,
-      id: _editedProduct.id,
-      isFavorite: _editedProduct.isFavorite,
-    );
-  }
-
-  void onSavedTitle(String value) {
-    _editedProduct = Product(
-      title: value,
-      price: _editedProduct.price,
-      description: _editedProduct.description,
-      imageUrl: _editedProduct.imageUrl,
-      id: _editedProduct.id,
-      isFavorite: _editedProduct.isFavorite,
-    );
+    return value.isEmpty ? 'Error description example' : null;
   }
 
   @override
@@ -209,7 +171,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) => focusScope.requestFocus(_priceFocusNode),
                 controller: _titleController,
                 validator: validatorTitle,
-                onSaved: onSavedTitle,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Price'),
@@ -219,7 +180,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) => focusScope.requestFocus(_descriptionFocusNode),
                 controller: _priceController,
                 validator: validatorPrice,
-                onSaved: onSavedPrice,
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
@@ -228,7 +188,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 focusNode: _descriptionFocusNode,
                 controller: _descriptionController,
                 validator: validatorDescription,
-                onSaved: onSavedDescription,
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -264,7 +223,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       focusNode: _imageUrlFocusNode,
                       onFieldSubmitted: (_) => _saveForm(),
                       validator: validatorImageUrl,
-                      onSaved: onSavedImageUrl,
                     ),
                   ),
                 ],
