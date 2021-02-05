@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 import '../screens/edit_product_screen.dart';
 
+///Shows the user product items
+
 class UserProductItem extends StatelessWidget {
   final String id;
   final String title;

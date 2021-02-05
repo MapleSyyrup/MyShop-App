@@ -13,6 +13,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    ///Tree for multiple providers
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => ProductsProvider()),
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           canvasColor: canvasTheme,
           fontFamily: 'Lato',
         ),
+        ///First screen to show
         initialRoute: ProductsOverviewScreen.routeName,
         onGenerateRoute: Routers.generateRoute,
       ),

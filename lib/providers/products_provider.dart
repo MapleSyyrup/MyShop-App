@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'product.dart';
 
-class ProductsProvider with ChangeNotifier {
+class ProductsProvider with ChangeNotifier { ///List of products
   final List<Product> _items = [
     Product(
       id: 'p1',
@@ -37,25 +37,24 @@ class ProductsProvider with ChangeNotifier {
 
   List<Product> get items {
     return [..._items];
-  }
+  } ///getter of _items
 
-  List<Product> get favoriteItems => _items.where((prodItem) => prodItem.isFavorite).toList();
+  List<Product> get favoriteItems => _items.where((prodItem) => prodItem.isFavorite).toList(); ///getter of favorited products
 
-  Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
+  Product findById(String id) => _items.firstWhere((prod) => prod.id == id); ///Returns the first product id that is the same with id
 
-  // addProduct is called when the user adds a new product in the shop
-  // newProduct is used here because product is a final variable and can't be changed
+  /// addProduct is called when the user adds a new product in the shop
   void addProduct(Product product) {
     _items.add(product);
     notifyListeners();
   }
 
-  void updateProduct(Product product) {
+  void updateProduct(Product product) { ///Updates the product
     _items[_items.indexWhere((prod) => prod.id == product.id)] = product;
     notifyListeners();
   }
 
-  void deleteProduct(String id) {
+  void deleteProduct(String id) { ///Deletes a product in the lisr
     _items.removeWhere((prod) => prod.id == id);
     notifyListeners();
   }

@@ -17,7 +17,7 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavoriteStatus() {
+  void toggleFavoriteStatus() { ///If the favorite button is pressed, the item will be added as favorite
     isFavorite = !isFavorite;
     notifyListeners();
   }

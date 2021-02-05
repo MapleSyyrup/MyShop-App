@@ -18,7 +18,7 @@ class ProductsOverviewScreen extends StatefulWidget {
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
 
-class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
+class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> { ///Function that shows only the favorited products
   void showOnlyFavorites(FilterOptions selectedValue) {
     setState(() {
       _showOnlyFavorites = selectedValue == FilterOptions.favorites;

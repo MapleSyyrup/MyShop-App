@@ -6,6 +6,7 @@ import '../screens/edit_product_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/user_product_item.dart';
 
+///Screen for the list of products added by the user
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
 

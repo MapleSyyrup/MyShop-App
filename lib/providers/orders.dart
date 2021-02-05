@@ -16,13 +16,13 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
-  final List<OrderItem> _orders = [];
+  final List<OrderItem> _orders = []; ///List of _orders
 
   List<OrderItem> get orders {
     return [..._orders];
-  }
+  } ///getter of _orders
 
-  void addOrder(List<CartItem> cartProducts, double total) {
+  void addOrder(List<CartItem> cartProducts, double total) { ///Function for adding an order
     final date = DateTime.now();
     _orders.insert(
       0,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+///Map of customized shades for the app
+
 Map<int, Color> primaryThemeColor = {
   50: const Color.fromRGBO(157, 146, 206, .1),
   100: const Color.fromRGBO(157, 146, 206, .2),
