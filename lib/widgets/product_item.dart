@@ -6,7 +6,6 @@ import '../providers/product.dart';
 import '../screens/product_detail_screen.dart';
 
 ///Shows the product items in grid view
-
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

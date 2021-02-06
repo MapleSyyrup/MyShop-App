@@ -15,18 +15,16 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
+  ///Map for cart items
   Map<String, CartItem> _items = {};
 
-  ///Map for cart items
-
+  ///getter of _items
   Map<String, CartItem> get items => {..._items};
 
-  ///getter of _items
-
+  ///Counts the number of _items in the cart
   int get itemCount => _items.length;
 
-  ///Counts the number of _items in the cart
-
+  /// Computes the total price of items in the cart. The price of the item multiplied by the quantity, then the total of items.
   double get totalAmount {
     var total = 0.0;
     _items.forEach((key, cartItem) {
@@ -35,10 +33,8 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  /// Computes the total price of items in the cart. The price of the item multiplied by the quantity, then the total of items.
-
+  ///Function for adding items in the cart
   void addItem(
-    ///Function for adding items in the cart
     String productId,
     double price,
     String title,
@@ -69,19 +65,16 @@ class Cart with ChangeNotifier {
       );
     }
     notifyListeners();
-
-    ///Notifies the provider about the changes in the cart
   }
 
+  ///Removes an item in the cart
   void removeItem(String productId) {
     _items.remove(productId);
     notifyListeners();
   }
 
-  ///Removes an item in the cart
-
+  ///This function is used by the snackbar when the UNDO button is pressed
   void removeSingleItem(String productId) {
-    ///This function is used by the snackbar when the UNDO button is pressed
     if (!_items.containsKey(productId)) {
       ///If the productId is not present in the cart items, it will return nothing
       return;
@@ -96,13 +89,14 @@ class Cart with ChangeNotifier {
           quantity: existingCartItem.quantity - 1,
         );
       });
-    } else { ///Removes the item
+    } else {
+      ///Removes the item
       _items.remove(productId);
     }
-    notifyListeners(); ///Notifies the provider about changes in the cart items
+    notifyListeners();
   }
 
-// clear cart
+  /// clear cart
   void clear() {
     _items = {};
     notifyListeners();

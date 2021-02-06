@@ -13,7 +13,6 @@ A route generator callback for named routes.
 If the named route is not here, the navigator will return the default screen
 Arguments are used to pass the information to that route
 */
-
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings setting) {
     switch (setting.name) {

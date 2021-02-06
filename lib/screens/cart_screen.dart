@@ -6,7 +6,7 @@ import '../providers/orders.dart';
 import '../widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
-  static const routeName = '/cart'; ///Route name for the navigator
+  static const routeName = '/cart';
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +37,12 @@ class CartScreen extends StatelessWidget {
                     backgroundColor: primaryColor,
                   ),
                   FlatButton(
-                    onPressed: () { ///If the FlatButton is pressed, the items in the cart will be added in the list of orders
+                    onPressed: () {
                       Provider.of<Orders>(context, listen: false).addOrder(
                         cart.items.values.toList(),
                         cart.totalAmount,
                       );
-                      cart.clear(); ///The items in the cart is cleared
+                      cart.clear();
                     },
                     textColor: primaryColor,
                     child: Text('Order Now'),
@@ -53,7 +53,7 @@ class CartScreen extends StatelessWidget {
           ),
           SizedBox(height: 10),
           Expanded(
-            child: ListView.builder( ///Shows the list of cart items
+            child: ListView.builder(
               itemCount: cart.itemCount,
               itemBuilder: (ctx, i) {
                 final item = cart.items.values.toList()[i];

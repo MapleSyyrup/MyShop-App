@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 ///Shows total number of items in the shopping cart
-
 class Badge extends StatelessWidget {
   const Badge({
     Key key,

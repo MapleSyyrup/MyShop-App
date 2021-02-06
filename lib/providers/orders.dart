@@ -15,14 +15,17 @@ class OrderItem {
   });
 }
 
+///List of _orders
 class Orders with ChangeNotifier {
-  final List<OrderItem> _orders = []; ///List of _orders
+  final List<OrderItem> _orders = [];
 
+  ///getter of _orders
   List<OrderItem> get orders {
     return [..._orders];
-  } ///getter of _orders
+  }
 
-  void addOrder(List<CartItem> cartProducts, double total) { ///Function for adding an order
+  ///Function for adding an order
+  void addOrder(List<CartItem> cartProducts, double total) {
     final date = DateTime.now();
     _orders.insert(
       0,

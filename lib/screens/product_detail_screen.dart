@@ -5,7 +5,6 @@ import '../providers/products_provider.dart';
 
 ///Screen for the product details
 class ProductDetailScreen extends StatelessWidget {
-  ///Route name for the navigator
   static const routeName = '/product-detail';
   final String productDetailArgs;
 
@@ -13,7 +12,6 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///The details is found in the list using the ProductId
     final loadedProduct = Provider.of<ProductsProvider>(
       context,
       listen: false,
