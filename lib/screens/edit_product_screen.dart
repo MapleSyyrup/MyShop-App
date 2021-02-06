@@ -6,6 +6,7 @@ import '../providers/products_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
+
   final EditProductArguments editProductarguments;
 
   const EditProductScreen({@required this.editProductarguments});
@@ -14,6 +15,7 @@ class EditProductScreen extends StatefulWidget {
   _EditProductScreenState createState() => _EditProductScreenState();
 }
 
+///Class for arguments that the navigator needs
 class EditProductArguments {
   final String productId;
 
@@ -37,12 +39,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
   );
 
+  ///Called when there is a state created
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImageUrl);
     super.initState();
   }
 
+  ///Called when there are changes in State
   @override
   void didChangeDependencies() {
     final args = widget.editProductarguments;
@@ -61,6 +65,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.didChangeDependencies();
   }
 
+  ///Removes an object if it is not needed
   @override
   void dispose() {
     _imageUrlFocusNode.removeListener(_updateImageUrl);
@@ -75,6 +80,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
+  ///Shows the image URL even if the product details are not yet saved
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
       if ((!_imageUrlController.text.startsWith('http') && !_imageUrlController.text.startsWith('https')) ||
@@ -87,13 +93,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
+  ///Function for saving the product details
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
 
+    ///Id the inputs of the user are not valid, it will not be saved
     if (!isValid) {
       return;
     }
     _formKey.currentState.save();
+
     final product = Product(
       id: _editedProduct.id ?? DateTime.now().toString(),
       title: _titleController.text,
@@ -102,10 +111,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
       imageUrl: _imageUrlController.text,
     );
     final provider = Provider.of<ProductsProvider>(context, listen: false);
+
+    ///If the productId is existing, the product will update, if the productId is not existing, a new product is added
     _editedProduct.id != null ? provider.updateProduct(product) : provider.addProduct(product);
+
+    ///Closes the edit product screen when the details are saved
     Navigator.of(context).pop();
   }
 
+  ///Validator condition for ImageUrl
   String validatorImageUrl(String value) {
     if (value.isEmpty) {
       return 'Please enter an image URL';
@@ -119,6 +133,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return null;
   }
 
+  ///Validator condition for Description
   String validatorDescription(String value) {
     if (value.isEmpty) {
       return 'Please enter a description';
@@ -129,6 +144,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return null;
   }
 
+  ///Validator condition for Price
   String validatorPrice(String value) {
     if (value.isEmpty) {
       return 'Please enter a price.';
@@ -142,6 +158,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return null;
   }
 
+  ///Validator condition for Title
   String validatorTitle(String value) {
     return value.isEmpty ? 'Error description example' : null;
   }

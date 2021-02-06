@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
           canvasColor: canvasTheme,
           fontFamily: 'Lato',
         ),
+
+        ///First screen to show
         initialRoute: ProductsOverviewScreen.routeName,
         onGenerateRoute: Routers.generateRoute,
       ),

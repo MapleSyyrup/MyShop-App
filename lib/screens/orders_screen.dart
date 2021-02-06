@@ -5,6 +5,7 @@ import '../providers/orders.dart' show Orders;
 import '../widgets/app_drawer.dart';
 import '../widgets/order_item.dart';
 
+///Screen for list of orders
 class OrdersScreen extends StatelessWidget {
   static const routeName = '/orders';
 

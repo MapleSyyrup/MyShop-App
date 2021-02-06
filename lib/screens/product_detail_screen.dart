@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/products_provider.dart';
 
+///Screen for the product details
 class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-detail';
   final String productDetailArgs;

@@ -15,12 +15,16 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
+  ///Map for cart items
   Map<String, CartItem> _items = {};
 
+  ///getter of _items
   Map<String, CartItem> get items => {..._items};
 
+  ///Counts the number of _items in the cart
   int get itemCount => _items.length;
 
+  /// Computes the total price of items in the cart. The price of the item multiplied by the quantity, then the total of items.
   double get totalAmount {
     var total = 0.0;
     _items.forEach((key, cartItem) {
@@ -29,12 +33,14 @@ class Cart with ChangeNotifier {
     return total;
   }
 
+  ///Function for adding items in the cart
   void addItem(
     String productId,
     double price,
     String title,
   ) {
     if (_items.containsKey(productId)) {
+      ///if the _items have the existing productId in the map, the quantity of an item will add up
       // change quantity...
       _items.update(
           productId,
@@ -45,6 +51,7 @@ class Cart with ChangeNotifier {
                 quantity: existingCartItem.quantity + 1,
               ));
     } else {
+      ///if there is no existing productId, a new item will be added
       _items.putIfAbsent(
         productId,
         () {
@@ -60,16 +67,20 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
+  ///Removes an item in the cart
   void removeItem(String productId) {
     _items.remove(productId);
     notifyListeners();
   }
 
+  ///This function is used by the snackbar when the UNDO button is pressed
   void removeSingleItem(String productId) {
     if (!_items.containsKey(productId)) {
+      ///If the productId is not present in the cart items, it will return nothing
       return;
     }
     if (_items[productId].quantity > 1) {
+      ///If the productId is present in the cart items, when the UNDO button is pressed, it will deduct the recently added item
       _items.update(productId, (existingCartItem) {
         return CartItem(
           id: existingCartItem.id,
@@ -79,12 +90,13 @@ class Cart with ChangeNotifier {
         );
       });
     } else {
+      ///Removes the item
       _items.remove(productId);
     }
     notifyListeners();
   }
 
-// clear cart
+  /// clear cart
   void clear() {
     _items = {};
     notifyListeners();

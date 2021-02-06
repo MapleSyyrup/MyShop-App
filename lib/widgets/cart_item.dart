@@ -41,13 +41,15 @@ class CartItem extends StatelessWidget {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('Are you sure?'),
-            content: Text('Doyou want to remove the item from the cart?'),
+            content: Text('Do you want to remove the item from the cart?'),
             actions: [
               FlatButton(
+                ///The item will not be removed in the cart
                 onPressed: () => Navigator.of(context).pop(false),
                 child: Text('No'),
               ),
               FlatButton(
+                ///The item will be removed in the cart
                 onPressed: () => Navigator.of(context).pop(true),
                 child: Text('Yes'),
               ),
@@ -56,6 +58,7 @@ class CartItem extends StatelessWidget {
         );
       },
       onDismissed: (direction) {
+        ///Removes the items
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
       child: Card(

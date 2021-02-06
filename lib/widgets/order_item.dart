@@ -8,6 +8,7 @@ class OrderItem extends StatelessWidget {
 
   const OrderItem({@required this.order});
 
+  ///Shows the order items
   @override
   Widget build(BuildContext context) {
     return Card(

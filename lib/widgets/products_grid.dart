@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/products_provider.dart';
 import './product_item.dart';
 
+/// Gridview builder for the products
 class ProductsGrid extends StatelessWidget {
   final bool showFavs;
 
