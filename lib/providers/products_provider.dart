@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/constants.dart';
 import 'product.dart';
 
 ///List of products
@@ -48,9 +52,34 @@ class ProductsProvider with ChangeNotifier {
   Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
 
   /// addProduct is called when the user adds a new product in the shop
-  void addProduct(Product product) {
-    _items.add(product);
-    notifyListeners();
+  Future<void> addProduct(Product product) {
+    final title = product.title;
+    final description = product.description;
+    final imageUrl = product.imageUrl;
+    final price = product.price;
+    final isFavorite = product.isFavorite;
+    return http
+        .post(
+      Constants.url,
+      body: json.encode({
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'price': price,
+        'isFavorite': isFavorite,
+      }),
+    )
+        .then((response) {
+      final newProduct = Product(
+        id: json.decode(response.body).toString(),
+        title: title,
+        description: description,
+        price: price,
+        imageUrl: imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
   }
 
   ///Updates the product
