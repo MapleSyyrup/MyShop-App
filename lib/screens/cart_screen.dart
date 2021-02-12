@@ -44,7 +44,6 @@ class CartScreen extends StatelessWidget {
                       );
                       cart.clear();
                     },
-                    // textColor: primaryColor,
                     child: Text('Order Now'),
                   )
                 ],

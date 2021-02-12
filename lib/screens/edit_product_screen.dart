@@ -94,6 +94,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
+  void isLoading() {
+    setState(() => _isLoading = false);
+    Navigator.of(context).pop();
+  }
+
   ///Function for saving the product details
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
@@ -103,9 +108,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final product = Product(
       id: _editedProduct.id ?? DateTime.now().toString(),
@@ -124,16 +127,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     //         );
     if (_editedProduct.id != null) {
       provider.updateProduct(product);
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop();
+      isLoading();
     } else {
       provider.addProduct(product).then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
+        isLoading();
       });
     }
 
@@ -198,9 +195,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
         ],
       ),
       body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(

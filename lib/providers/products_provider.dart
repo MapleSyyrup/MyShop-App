@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/constants.dart';
 import 'product.dart';
 
 ///List of products
@@ -52,24 +53,29 @@ class ProductsProvider with ChangeNotifier {
 
   /// addProduct is called when the user adds a new product in the shop
   Future<void> addProduct(Product product) {
-    const url = 'https://shop-app-4ed38-default-rtdb.firebaseio.com/products.json';
-    return http.post(
-      url,
+    final title = product.title;
+    final description = product.description;
+    final imageUrl = product.imageUrl;
+    final price = product.price;
+    final isFavorite = product.isFavorite;
+    return http
+        .post(
+      Constants.url,
       body: json.encode({
-        'title': product.title,
-        'description': product.description,
-        'imageUrl': product.imageUrl,
-        'price': product.price,
-        'isFavorite': product.isFavorite,
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'price': price,
+        'isFavorite': isFavorite,
       }),
     )
         .then((response) {
       final newProduct = Product(
         id: json.decode(response.body).toString(),
-        title: product.title,
-        description: product.description,
-        price: product.price,
-        imageUrl: product.imageUrl,
+        title: title,
+        description: description,
+        price: price,
+        imageUrl: imageUrl,
       );
       _items.add(newProduct);
       notifyListeners();
