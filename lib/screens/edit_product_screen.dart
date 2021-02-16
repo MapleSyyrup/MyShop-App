@@ -132,17 +132,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
             content: Text('Something went wrong.'),
             actions: [
               TextButton(
-                onPressed: () {
-                  Navigator.of(ctx).pop();
-                },
+                onPressed: () => Navigator.of(ctx).pop(),
                 child: Text('Okay'),
               ),
             ],
           ),
         );
-      }).then((_) {
-        isLoading();
-      });
+      }).then((_) => isLoading());
     }
 
     ///Closes the edit product screen when the details are saved
