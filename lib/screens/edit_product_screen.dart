@@ -120,18 +120,25 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final provider = Provider.of<ProductsProvider>(context, listen: false);
 
     ///If the productId is existing, the product will update, if the productId is not existing, a new product is added
-    // _editedProduct.id != null
-    //     ? provider.updateProduct(product)
-    //     : provider.addProduct(product).then(
-    //           (value) => Navigator.of(context).pop(),
-    //         );
     if (_editedProduct.id != null) {
       provider.updateProduct(product);
       isLoading();
     } else {
-      provider.addProduct(product).then((_) {
-        isLoading();
-      });
+      provider.addProduct(product).catchError((Object error) {
+        return showDialog<void>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('An error occured'),
+            content: Text('Something went wrong.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text('Okay'),
+              ),
+            ],
+          ),
+        );
+      }).then((_) => isLoading());
     }
 
     ///Closes the edit product screen when the details are saved
