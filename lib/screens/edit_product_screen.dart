@@ -100,7 +100,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   ///Function for saving the product details
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final isValid = _formKey.currentState.validate();
 
     ///Id the inputs of the user are not valid, it will not be saved
@@ -124,8 +124,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
       provider.updateProduct(product);
       isLoading();
     } else {
-      provider.addProduct(product).catchError((Object error) {
-        return showDialog<void>(
+      try {
+        await provider.addProduct(product);
+      } catch (error) {
+        await showDialog<void>(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('An error occured'),
@@ -138,10 +140,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) => isLoading());
+      } finally {
+        ///Closes the edit product screen when the details are saved
+        isLoading();
+      }
     }
-
-    ///Closes the edit product screen when the details are saved
   }
 
   ///Validator condition for ImageUrl
