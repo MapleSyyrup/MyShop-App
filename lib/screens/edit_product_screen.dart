@@ -121,8 +121,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     ///If the productId is existing, the product will update, if the productId is not existing, a new product is added
     if (_editedProduct.id != null) {
-      provider.updateProduct(product);
-      isLoading();
+      await provider.updateProduct(product);
     } else {
       try {
         await provider.addProduct(product);
@@ -140,11 +139,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      } finally {
-        ///Closes the edit product screen when the details are saved
-        isLoading();
       }
     }
+
+    ///Closes the edit product screen when the details are saved
+    isLoading();
   }
 
   ///Validator condition for ImageUrl

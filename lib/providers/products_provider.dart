@@ -77,9 +77,21 @@ class ProductsProvider with ChangeNotifier {
   }
 
   ///Updates the product
-  void updateProduct(Product product) {
-    _items[_items.indexWhere((prod) => prod.id == product.id)] = product;
-    notifyListeners();
+  Future<void> updateProduct(Product product) async {
+    final prodIndex = _items.indexWhere((prod) => prod.id == product.id);
+
+    if (prodIndex >= 0) {
+      final url = 'https://shop-app-4ed38-default-rtdb.firebaseio.com/products/${product.id}.json';
+      await http.patch(url,
+          body: json.encode({
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+          }));
+      _items[prodIndex] = product;
+      notifyListeners();
+    }
   }
 
   ///Deletes a product in the list
