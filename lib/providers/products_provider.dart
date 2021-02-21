@@ -78,7 +78,6 @@ class ProductsProvider with ChangeNotifier {
 
   ///Updates the product
   Future<void> updateProduct(Product product) async {
-    // _items[_items.indexWhere((prod) => prod.id == product.id)] = product;
     final prodIndex = _items.indexWhere((prod) => prod.id == product.id);
 
     if (prodIndex >= 0) {
@@ -92,7 +91,7 @@ class ProductsProvider with ChangeNotifier {
           }));
       _items[prodIndex] = product;
       notifyListeners();
-    } else {}
+    }
   }
 
   ///Deletes a product in the list
