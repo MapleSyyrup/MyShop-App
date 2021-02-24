@@ -23,7 +23,7 @@ class ProductsProvider with ChangeNotifier {
   Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
 
   Future<void> fetchAndSetProducts() async {
-    final url = Constants.url;
+    final url = '${Constants.url}/products.json';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -52,9 +52,10 @@ class ProductsProvider with ChangeNotifier {
     final imageUrl = product.imageUrl;
     final price = product.price;
     final isFavorite = product.isFavorite;
+    final url = '${Constants.url}/products.json';
     try {
       final response = await http.post(
-        Constants.url,
+        url,
         body: json.encode({
           'title': title,
           'description': description,
@@ -82,8 +83,8 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == product.id);
 
     if (prodIndex >= 0) {
-      final url = 'https://shop-app-4ed38-default-rtdb.firebaseio.com/products/${product.id}.json';
-      await http.patch(url,
+      final urlProdId = '${Constants.url}/products/${product.id}.json';
+      await http.patch(urlProdId,
           body: json.encode({
             'title': product.title,
             'description': product.description,
@@ -97,12 +98,12 @@ class ProductsProvider with ChangeNotifier {
 
   ///Deletes a product in the list and in the database
   Future<void> deleteProduct(String id) async {
-    final url = 'https://shop-app-4ed38-default-rtdb.firebaseio.com/products/$id.json';
+    final urlId = '${Constants.url}/products/$id.json';
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
     notifyListeners();
-    final response = await http.delete(url);
+    final response = await http.delete(urlId);
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);
       notifyListeners();
