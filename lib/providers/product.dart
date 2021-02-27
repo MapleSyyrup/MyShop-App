@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:myshop_app/models/constants.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -17,9 +21,28 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  ///If the favorite button is pressed, the item will be added as favorite
-  void toggleFavoriteStatus() {
-    isFavorite = !isFavorite;
+  void _setFavValue(bool newValue) {
+    isFavorite = newValue;
     notifyListeners();
+  }
+
+  ///If the favorite button is pressed, the item will be added as favorite
+  Future<void> toggleFavoriteStatus() async {
+    final oldStatus = isFavorite;
+    final newValue = !isFavorite;
+    final url = '${Constants.url}/products/$id.json';
+    try {
+      final response = await http.patch(
+        url,
+        body: json.encode({'isFavorite': !isFavorite}),
+      );
+      if (response.statusCode >= 400) {
+        _setFavValue(oldStatus);
+      } else {
+        _setFavValue(newValue);
+      }
+    } catch (error) {
+      _setFavValue(oldStatus);
+    }
   }
 }
