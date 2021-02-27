@@ -40,7 +40,6 @@ class Product with ChangeNotifier {
         _setFavValue(oldStatus);
       } else {
         _setFavValue(newValue);
-        notifyListeners();
       }
     } catch (error) {
       _setFavValue(oldStatus);
