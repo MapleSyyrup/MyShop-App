@@ -29,6 +29,7 @@ class Product with ChangeNotifier {
   ///If the favorite button is pressed, the item will be added as favorite
   Future<void> toggleFavoriteStatus() async {
     final oldStatus = isFavorite;
+    final newValue = !isFavorite;
     final url = '${Constants.url}/products/$id.json';
     try {
       final response = await http.patch(
@@ -38,7 +39,7 @@ class Product with ChangeNotifier {
       if (response.statusCode >= 400) {
         _setFavValue(oldStatus);
       } else {
-        isFavorite = !isFavorite;
+        _setFavValue(newValue);
         notifyListeners();
       }
     } catch (error) {
