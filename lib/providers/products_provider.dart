@@ -23,7 +23,7 @@ class ProductsProvider with ChangeNotifier {
   Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
 
   Future<void> fetchAndSetProducts() async {
-    final url = '${Constants.url}/products.json';
+    const url = '${Constants.url}/products.json';
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -55,7 +55,7 @@ class ProductsProvider with ChangeNotifier {
     final imageUrl = product.imageUrl;
     final price = product.price;
     final isFavorite = product.isFavorite;
-    final url = '${Constants.url}/products.json';
+    const url = '${Constants.url}/products.json';
     try {
       final response = await http.post(
         url,
