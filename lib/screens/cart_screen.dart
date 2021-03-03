@@ -85,6 +85,12 @@ class _OrderButtonState extends State<OrderButton> {
     });
   }
 
+  void _notLoading() {
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
@@ -96,7 +102,7 @@ class _OrderButtonState extends State<OrderButton> {
                 widget.cart.items.values.toList(),
                 widget.cart.totalAmount,
               );
-              _loading();
+              _notLoading();
               widget.cart.clear();
             },
       child: _isLoading ? CircularProgressIndicator() : Text('Order Now'),
