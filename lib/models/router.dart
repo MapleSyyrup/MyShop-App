@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop_app/screens/auth_screen.dart';
 
 import '../screens/cart_screen.dart';
 import '../screens/edit_product_screen.dart';
@@ -16,6 +17,8 @@ Arguments are used to pass the information to that route
 class Routers {
   static Route<dynamic> generateRoute(RouteSettings setting) {
     switch (setting.name) {
+      case AuthScreen.routeName:
+        return MaterialPageRoute<dynamic>(builder: (BuildContext context) => AuthScreen());
       case ProductsOverviewScreen.routeName:
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductsOverviewScreen());
       case ProductDetailScreen.routeName:
