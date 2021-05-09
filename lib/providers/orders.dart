@@ -8,21 +8,25 @@ import './cart.dart';
 
 class OrderItem {
   final String id;
-  final double amount;
+  final double? amount;
   final List<CartItem> products;
   final DateTime dateTime;
 
   OrderItem({
-    @required this.id,
-    @required this.amount,
-    @required this.products,
-    @required this.dateTime,
+    required this.id,
+    required this.amount,
+    required this.products,
+    required this.dateTime,
   });
 }
 
 ///List of _orders
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String? authToken;
+  final String? userId;
+
+  Orders(this.authToken, this.userId, this._orders);
 
   ///getter of _orders
   List<OrderItem> get orders {
@@ -30,11 +34,11 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAndSetOrders() async {
-    const url = '${Constants.url}/orders.json';
+    final url = Uri.parse('${Constants.url}/orders/$userId.json?auth=$authToken');
 
     final List<OrderItem> loadedOrders = [];
     final response = await http.get(url);
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    final extractedData = json.decode(response.body) as Map<String, dynamic>?;
     if (extractedData == null) {
       return;
     }
@@ -42,15 +46,15 @@ class Orders with ChangeNotifier {
       loadedOrders.add(
         OrderItem(
           id: orderId,
-          amount: orderData['amount'] as double,
+          amount: orderData['amount'] as double?,
           dateTime: DateTime.parse(orderData['dateTime'].toString()),
           products: (orderData['products'] as List<dynamic>)
               .map(
                 (dynamic item) => CartItem(
                   id: item['id'].toString(),
                   title: item['title'].toString(),
-                  quantity: item['quantity'] as int,
-                  price: item['price'] as double,
+                  quantity: item['quantity'] as int?,
+                  price: item['price'] as double?,
                 ),
               )
               .toList(),
@@ -63,7 +67,7 @@ class Orders with ChangeNotifier {
 
   ///Function for adding an order
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    const url = '${Constants.url}/orders.json';
+    final url = Uri.parse('${Constants.url}/orders/$userId.json?auth=$authToken');
     final timestamp = DateTime.now();
     try {
       final response = await http.post(url,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myshop_app/providers/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
@@ -11,6 +12,7 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context, listen: false);
     final accentColor = Theme.of(context).accentColor;
+    final authData = Provider.of<Auth>(context, listen: false);
     return Consumer<Product>(
       builder: (ctx, product, child) => ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -18,8 +20,11 @@ class ProductItem extends StatelessWidget {
           footer: GridTileBar(
             backgroundColor: Colors.black87,
             leading: IconButton(
-              icon: Icon(product.isFavorite ? Icons.favorite : Icons.favorite_border),
-              onPressed: () => product.toggleFavoriteStatus(),
+              icon: Icon(product.isFavorite == true ? Icons.favorite : Icons.favorite_border),
+              onPressed: () => product.toggleFavoriteStatus(
+                authData.token,
+                authData.userId,
+              ),
               color: accentColor,
             ),
             title: Text(

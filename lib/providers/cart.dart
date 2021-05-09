@@ -3,23 +3,23 @@ import 'package:flutter/foundation.dart';
 class CartItem {
   final String id;
   final String title;
-  final int quantity;
-  final double price;
+  final int? quantity;
+  final double? price;
 
   CartItem({
-    @required this.id,
-    @required this.title,
-    @required this.quantity,
-    @required this.price,
+    required this.id,
+    required this.title,
+    required this.quantity,
+    required this.price,
   });
 }
 
 class Cart with ChangeNotifier {
   ///Map for cart items
-  Map<String, CartItem> _items = {};
+  Map<String?, CartItem> _items = {};
 
   ///getter of _items
-  Map<String, CartItem> get items => {..._items};
+  Map<String?, CartItem> get items => {..._items};
 
   ///Counts the number of _items in the cart
   int get itemCount => _items.length;
@@ -28,15 +28,15 @@ class Cart with ChangeNotifier {
   double get totalAmount {
     var total = 0.0;
     _items.forEach((key, cartItem) {
-      total += cartItem.price * cartItem.quantity;
+      total += cartItem.price! * cartItem.quantity!;
     });
     return total;
   }
 
   ///Function for adding items in the cart
   void addItem(
-    String productId,
-    double price,
+    String? productId,
+    double? price,
     String title,
   ) {
     if (_items.containsKey(productId)) {
@@ -48,7 +48,7 @@ class Cart with ChangeNotifier {
                 id: existingCartItem.id,
                 title: existingCartItem.title,
                 price: existingCartItem.price,
-                quantity: existingCartItem.quantity + 1,
+                quantity: existingCartItem.quantity! + 1,
               ));
     } else {
       ///if there is no existing productId, a new item will be added
@@ -68,25 +68,25 @@ class Cart with ChangeNotifier {
   }
 
   ///Removes an item in the cart
-  void removeItem(String productId) {
+  void removeItem(String? productId) {
     _items.remove(productId);
     notifyListeners();
   }
 
   ///This function is used by the snackbar when the UNDO button is pressed
-  void removeSingleItem(String productId) {
+  void removeSingleItem(String? productId) {
     if (!_items.containsKey(productId)) {
       ///If the productId is not present in the cart items, it will return nothing
       return;
     }
-    if (_items[productId].quantity > 1) {
+    if (_items[productId]!.quantity! > 1) {
       ///If the productId is present in the cart items, when the UNDO button is pressed, it will deduct the recently added item
       _items.update(productId, (existingCartItem) {
         return CartItem(
           id: existingCartItem.id,
           title: existingCartItem.title,
           price: existingCartItem.price,
-          quantity: existingCartItem.quantity - 1,
+          quantity: existingCartItem.quantity! - 1,
         );
       });
     } else {

@@ -6,7 +6,7 @@ import '../providers/orders.dart' as ord;
 class OrderItem extends StatelessWidget {
   final ord.OrderItem order;
 
-  const OrderItem({@required this.order});
+  const OrderItem({required this.order});
 
   ///Shows the order items
   @override
@@ -14,7 +14,7 @@ class OrderItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(5),
       child: ExpansionTile(
-        title: Text('\$${order.amount.toStringAsFixed(2)}'),
+        title: Text('\$${order.amount!.toStringAsFixed(2)}'),
         subtitle: Text(DateFormat('dd/MM/yyyy hh:mm').format(order.dateTime)),
         children: [
           ...order.products.map(

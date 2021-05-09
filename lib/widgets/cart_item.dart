@@ -4,17 +4,17 @@ import '../providers/cart.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
-  final String productId;
-  final double price;
-  final int quantity;
+  final String? productId;
+  final double? price;
+  final int? quantity;
   final String title;
 
   const CartItem({
-    @required this.id,
-    @required this.productId,
-    @required this.price,
-    @required this.quantity,
-    @required this.title,
+    required this.id,
+    required this.productId,
+    required this.price,
+    required this.quantity,
+    required this.title,
   });
 
   @override
@@ -76,7 +76,7 @@ class CartItem extends StatelessWidget {
               ),
             ),
             title: Text(title),
-            subtitle: Text('Total: \$${(price * quantity).toStringAsFixed(2)}'),
+            subtitle: Text('Total: \$${(price! * quantity!).toStringAsFixed(2)}'),
             trailing: Text('$quantity x'),
           ),
         ),

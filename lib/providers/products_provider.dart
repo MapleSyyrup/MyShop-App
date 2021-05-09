@@ -11,6 +11,15 @@ import 'product.dart';
 class ProductsProvider with ChangeNotifier {
   List<Product> _items = [];
 
+  final String? authToken;
+  final String? userId;
+
+  ProductsProvider(
+    this.authToken,
+    this.userId,
+    this._items,
+  );
+
   ///getter of _items
   List<Product> get items {
     return [..._items];
@@ -20,31 +29,40 @@ class ProductsProvider with ChangeNotifier {
   List<Product> get favoriteItems => _items.where((prodItem) => prodItem.isFavorite).toList();
 
   ///Returns the first product id that is the same with id
-  Product findById(String id) => _items.firstWhere((prod) => prod.id == id);
+  Product findById(String? id) => _items.firstWhere((prod) => prod.id == id);
 
-  Future<void> fetchAndSetProducts() async {
-    const url = '${Constants.url}/products.json';
-    try {
-      final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData == null) {
-        return;
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    final filterString = filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
+    if (authToken != null) {
+      var url = Uri.parse('${Constants.url}/products.json?auth=$authToken&$filterString');
+      try {
+        final response = await http.get(url);
+        final extractedData = json.decode(response.body) as Map<String, dynamic>?;
+        if (extractedData == null) {
+          return;
+        }
+
+        url = Uri.parse('${Constants.url}/userFavorites/$userId.json?auth=$authToken');
+        final favoriteResponse = await http.get(url);
+        final favoriteData = json.decode(favoriteResponse.body) as Map<String, dynamic>?;
+        final List<Product> loadedProducts = [];
+        extractedData.forEach((String prodId, dynamic prodData) {
+          final favorite = favoriteData != null ? favoriteData[prodId] as bool? : false;
+
+          loadedProducts.add(Product(
+            id: prodId,
+            title: prodData['title'].toString(),
+            description: prodData['description'].toString(),
+            price: prodData['price'] as double?,
+            isFavorite: favorite == true,
+            imageUrl: prodData['imageUrl'].toString(),
+          ));
+        });
+        _items = loadedProducts;
+        notifyListeners();
+      } catch (error) {
+        rethrow;
       }
-      final List<Product> loadedProducts = [];
-      extractedData.forEach((String prodId, dynamic prodData) {
-        loadedProducts.add(Product(
-          id: prodId,
-          title: prodData['title'].toString(),
-          description: prodData['description'].toString(),
-          price: prodData['price'] as double,
-          isFavorite: prodData['isFavorite'] as bool,
-          imageUrl: prodData['imageUrl'].toString(),
-        ));
-      });
-      _items = loadedProducts;
-      notifyListeners();
-    } catch (error) {
-      rethrow;
     }
   }
 
@@ -54,8 +72,7 @@ class ProductsProvider with ChangeNotifier {
     final description = product.description;
     final imageUrl = product.imageUrl;
     final price = product.price;
-    final isFavorite = product.isFavorite;
-    const url = '${Constants.url}/products.json';
+    final url = Uri.parse('${Constants.url}/products.json?auth=$authToken');
     try {
       final response = await http.post(
         url,
@@ -64,7 +81,7 @@ class ProductsProvider with ChangeNotifier {
           'description': description,
           'imageUrl': imageUrl,
           'price': price,
-          'isFavorite': isFavorite,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
@@ -86,7 +103,7 @@ class ProductsProvider with ChangeNotifier {
     final prodIndex = _items.indexWhere((prod) => prod.id == product.id);
 
     if (prodIndex >= 0) {
-      final urlProdId = '${Constants.url}/products/${product.id}.json';
+      final urlProdId = Uri.parse('${Constants.url}/products/${product.id}.json?auth=$authToken');
       await http.patch(urlProdId,
           body: json.encode({
             'title': product.title,
@@ -100,8 +117,8 @@ class ProductsProvider with ChangeNotifier {
   }
 
   ///Deletes a product in the list and in the database
-  Future<void> deleteProduct(String id) async {
-    final urlId = '${Constants.url}/products/$id.json';
+  Future<void> deleteProduct(String? id) async {
+    final urlId = Uri.parse('${Constants.url}/products/$id.json?auth=$authToken');
     final response = await http.delete(urlId);
     if (response.statusCode >= 400) {
       throw HttpException('Could not delete product.');
