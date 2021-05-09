@@ -7,9 +7,9 @@ import '../providers/products_provider.dart';
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
 
-  final EditProductArguments editProductarguments;
+  final EditProductArguments? editProductarguments;
 
-  const EditProductScreen({@required this.editProductarguments});
+  const EditProductScreen({required this.editProductarguments});
 
   @override
   _EditProductScreenState createState() => _EditProductScreenState();
@@ -17,9 +17,9 @@ class EditProductScreen extends StatefulWidget {
 
 ///Class for arguments that the navigator needs
 class EditProductArguments {
-  final String productId;
+  final String? productId;
 
-  EditProductArguments({@required this.productId});
+  EditProductArguments({required this.productId});
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
@@ -101,13 +101,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   ///Function for saving the product details
   Future<void> _saveForm() async {
-    final isValid = _formKey.currentState.validate();
+    final isValid = _formKey.currentState!.validate();
 
     ///Id the inputs of the user are not valid, it will not be saved
     if (!isValid) {
       return;
     }
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     setState(() => _isLoading = true);
 
     final product = Product(
@@ -147,8 +147,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   ///Validator condition for ImageUrl
-  String validatorImageUrl(String value) {
-    if (value.isEmpty) {
+  String? validatorImageUrl(String? value) {
+    if (value!.isEmpty) {
       return 'Please enter an image URL';
     }
     if (value.startsWith('http') && !value.startsWith('https')) {
@@ -161,8 +161,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   ///Validator condition for Description
-  String validatorDescription(String value) {
-    if (value.isEmpty) {
+  String? validatorDescription(String? value) {
+    if (value!.isEmpty) {
       return 'Please enter a description';
     }
     if (value.length < 10) {
@@ -172,8 +172,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   ///Validator condition for Price
-  String validatorPrice(String value) {
-    if (value.isEmpty) {
+  String? validatorPrice(String? value) {
+    if (value!.isEmpty) {
       return 'Please enter a price.';
     }
     if (double.tryParse(value) == null) {
@@ -186,8 +186,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   ///Validator condition for Title
-  String validatorTitle(String value) {
-    return value.isEmpty ? 'Error description example' : null;
+  String? validatorTitle(String? value) {
+    return value!.isEmpty ? 'Error description example' : null;
   }
 
   @override

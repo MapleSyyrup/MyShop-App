@@ -12,12 +12,13 @@ class UserProductsScreen extends StatelessWidget {
 
   ///Refreshes the list of products from the database
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<ProductsProvider>(context, listen: false).fetchAndSetProducts();
+    await Provider.of<ProductsProvider>(context, listen: false).fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<ProductsProvider>(context);
+    // print('rebuilding...');
+    // final productsData = Provider.of<ProductsProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -29,27 +30,36 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: AppDrawer(),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: ListView.builder(
-            itemCount: productsData.items.length,
-            itemBuilder: (_, i) {
-              final productsDt = productsData.items[i];
-              return Column(
-                children: [
-                  UserProductItem(
-                    id: productsDt.id,
-                    title: productsDt.title,
-                    imageUrl: productsDt.imageUrl,
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : RefreshIndicator(
+                onRefresh: () => _refreshProducts(context),
+                child: Consumer<ProductsProvider>(
+                  builder: (ctx, productsData, _) => Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ListView.builder(
+                      itemCount: productsData.items.length,
+                      itemBuilder: (_, i) {
+                        final productsDt = productsData.items[i];
+                        return Column(
+                          children: [
+                            UserProductItem(
+                              id: productsDt.id,
+                              title: productsDt.title,
+                              imageUrl: productsDt.imageUrl,
+                            ),
+                            Divider(),
+                          ],
+                        );
+                      },
+                    ),
                   ),
-                  Divider(),
-                ],
-              );
-            },
-          ),
-        ),
+                ),
+              ),
       ),
     );
   }

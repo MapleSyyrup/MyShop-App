@@ -22,7 +22,7 @@ class Routers {
       case ProductsOverviewScreen.routeName:
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => ProductsOverviewScreen());
       case ProductDetailScreen.routeName:
-        final argument = setting.arguments as String;
+        final argument = setting.arguments as String?;
         return MaterialPageRoute<dynamic>(
             builder: (BuildContext context) => ProductDetailScreen(productDetailArgs: argument));
       case CartScreen.routeName:
@@ -32,7 +32,7 @@ class Routers {
       case UserProductsScreen.routeName:
         return MaterialPageRoute<dynamic>(builder: (BuildContext context) => UserProductsScreen());
       case EditProductScreen.routeName:
-        final args = setting.arguments as EditProductArguments;
+        final args = setting.arguments as EditProductArguments?;
         return MaterialPageRoute<dynamic>(
             builder: (BuildContext context) => EditProductScreen(editProductarguments: args));
       default:

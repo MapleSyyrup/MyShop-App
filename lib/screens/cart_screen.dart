@@ -12,7 +12,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context);
     final primaryColor = Theme.of(context).primaryColor;
-    final primaryTextTheme = Theme.of(context).primaryTextTheme.headline1.color;
+    final primaryTextTheme = Theme.of(context).primaryTextTheme.headline1!.color;
     return Scaffold(
       appBar: AppBar(title: Text('Your Cart')),
       body: Column(
@@ -66,8 +66,8 @@ class CartScreen extends StatelessWidget {
 
 class OrderButton extends StatefulWidget {
   const OrderButton({
-    Key key,
-    @required this.cart,
+    Key? key,
+    required this.cart,
   }) : super(key: key);
 
   final Cart cart;

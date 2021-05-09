@@ -18,9 +18,27 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => Auth()),
-        ChangeNotifierProvider(create: (ctx) => ProductsProvider()),
+        ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+          update: (ctx, auth, previousProducts) {
+            return ProductsProvider(auth.token, auth.userId, previousProducts == null ? [] : previousProducts.items);
+          },
+          // ProductsProvider(auth.token ),
+          create: (_) => ProductsProvider(
+            null,
+            null,
+            [],
+          ),
+        ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+            create: (_) => Orders(
+                  null,
+                  null,
+                  [],
+                ),
+            update: (ctx, auth, previousOrder) =>
+                Orders(auth.token, auth.userId, previousOrder == null ? [] : previousOrder.orders)),
+        // ChangeNotifierProvider(create: (ctx) => Orders()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) => MaterialApp(
@@ -33,11 +51,12 @@ class MyApp extends StatelessWidget {
           ),
 
           ///First screen to show
-          initialRoute: auth.isAuth ? ProductsOverviewScreen.routeName : AuthScreen.routeName,
-          // home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          initialRoute: firstScreen(auth),
           onGenerateRoute: Routers.generateRoute,
         ),
       ),
     );
   }
+
+  String firstScreen(Auth auth) => auth.isAuth ? ProductsOverviewScreen.routeName : AuthScreen.routeName;
 }

@@ -6,14 +6,14 @@ import '../screens/edit_product_screen.dart';
 
 ///Shows the user product items
 class UserProductItem extends StatelessWidget {
-  final String id;
+  final String? id;
   final String title;
   final String imageUrl;
 
   const UserProductItem({
-    @required this.title,
-    @required this.imageUrl,
-    @required this.id,
+    required this.title,
+    required this.imageUrl,
+    required this.id,
   });
 
   @override

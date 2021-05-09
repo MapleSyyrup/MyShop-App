@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:myshop_app/models/http_exception.dart';
 import 'package:myshop_app/providers/auth.dart';
 import 'package:myshop_app/screens/products_overview_screen.dart';
+// import 'package:myshop_app/screens/products_overview_screen.dart';
 import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
@@ -61,7 +62,7 @@ class AuthScreen extends StatelessWidget {
                       child: Text(
                         'MyShop',
                         style: TextStyle(
-                          color: Theme.of(context).accentTextTheme.headline6.color,
+                          color: Theme.of(context).accentTextTheme.headline6!.color,
                           fontSize: 50,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
@@ -85,7 +86,7 @@ class AuthScreen extends StatelessWidget {
 
 class AuthCard extends StatefulWidget {
   const AuthCard({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -95,7 +96,7 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  final Map<String, String> _authData = {
+  final Map<String, String?> _authData = {
     'email': '',
     'password': '',
   };
@@ -119,11 +120,11 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
     }
-    _formKey.currentState.save();
+    _formKey.currentState!.save();
     setState(() {
       _isLoading = true;
     });
@@ -135,6 +136,7 @@ class _AuthCardState extends State<AuthCard> {
           _authData['email'],
           _authData['password'],
         );
+        // Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
       } else {
         // Sign user up
         await Provider.of<Auth>(context, listen: false).signUp(
@@ -142,7 +144,7 @@ class _AuthCardState extends State<AuthCard> {
           _authData['password'],
         );
       }
-      // Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
+      Navigator.of(context).pushReplacementNamed(ProductsOverviewScreen.routeName);
     } on HttpException catch (error) {
       var errorMessage = 'Authentication failed';
       if (error.toString().contains('EMAIL_EXISTS')) {
@@ -201,7 +203,7 @@ class _AuthCardState extends State<AuthCard> {
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
+                    if (value!.isEmpty || !value.contains('@')) {
                       return 'Invalid email!';
                     }
                     return null;
@@ -216,7 +218,7 @@ class _AuthCardState extends State<AuthCard> {
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
-                    if (value.isEmpty || value.length < 5) {
+                    if (value!.isEmpty || value.length < 5) {
                       return 'Password is too short!';
                     } else {
                       return null;

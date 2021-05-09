@@ -6,9 +6,9 @@ import '../providers/products_provider.dart';
 ///Screen for the product details
 class ProductDetailScreen extends StatelessWidget {
   static const routeName = '/product-detail';
-  final String productDetailArgs;
+  final String? productDetailArgs;
 
-  const ProductDetailScreen({@required this.productDetailArgs});
+  const ProductDetailScreen({required this.productDetailArgs});
 
   @override
   Widget build(BuildContext context) {
